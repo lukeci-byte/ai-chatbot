@@ -1,5 +1,4 @@
 import { memo, type SetStateAction } from 'react';
-
 import type { UIBlock } from './block';
 import { FileIcon, LoaderIcon, MessageIcon, PencilEditIcon } from './icons';
 import { toast } from 'sonner';
@@ -39,7 +38,7 @@ function PureDocumentToolResult({
   return (
     <button
       type="button"
-      className="bg-background cursor-pointer border py-2 px-3 rounded-xl w-fit flex flex-row gap-3 items-start"
+      className="bg-background cursor-pointer border py-2 px-3 rounded-xl w-fit flex flex-row gap-3 items-start focus:ring-2 focus:ring-blue-500 focus:outline-none hover:bg-gray-100"
       onClick={(event) => {
         if (isReadonly) {
           toast.error(
@@ -66,8 +65,9 @@ function PureDocumentToolResult({
           boundingBox,
         });
       }}
+      aria-label={`${getActionText(type, 'past')} "${result.title}"`}
     >
-      <div className="text-muted-foreground mt-1">
+      <div className="text-muted-foreground mt-1" aria-hidden="true">
         {type === 'create' ? (
           <FileIcon />
         ) : type === 'update' ? (
@@ -76,7 +76,7 @@ function PureDocumentToolResult({
           <MessageIcon />
         ) : null}
       </div>
-      <div className="text-left">
+      <div className="text-left text-gray-700">
         {`${getActionText(type, 'past')} "${result.title}"`}
       </div>
     </button>
@@ -101,7 +101,7 @@ function PureDocumentToolCall({
   return (
     <button
       type="button"
-      className="cursor pointer w-fit border py-2 px-3 rounded-xl flex flex-row items-start justify-between gap-3"
+      className="cursor-pointer w-fit border py-2 px-3 rounded-xl flex flex-row items-start justify-between gap-3 focus:ring-2 focus:ring-blue-500 focus:outline-none hover:bg-gray-100"
       onClick={(event) => {
         if (isReadonly) {
           toast.error(
@@ -125,9 +125,12 @@ function PureDocumentToolCall({
           boundingBox,
         }));
       }}
+      aria-label={`${getActionText(type, 'present')} ${
+        args.title ? `"${args.title}"` : ''
+      }`}
     >
       <div className="flex flex-row gap-3 items-start">
-        <div className="text-zinc-500 mt-1">
+        <div className="text-gray-700 mt-1" aria-hidden="true">
           {type === 'create' ? (
             <FileIcon />
           ) : type === 'update' ? (
@@ -137,14 +140,19 @@ function PureDocumentToolCall({
           ) : null}
         </div>
 
-        <div className="text-left">
-          {`${getActionText(type, 'present')} ${args.title ? `"${args.title}"` : ''}`}
+        <div className="text-left text-gray-700">
+          {`${getActionText(type, 'present')} ${
+            args.title ? `"${args.title}"` : ''
+          }`}
         </div>
       </div>
 
-      <div className="animate-spin mt-1">{<LoaderIcon />}</div>
+      <div className="animate-spin mt-1" aria-hidden="true">
+        <LoaderIcon />
+      </div>
     </button>
   );
 }
 
 export const DocumentToolCall = memo(PureDocumentToolCall, () => true);
+
